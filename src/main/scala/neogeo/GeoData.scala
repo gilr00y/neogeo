@@ -28,6 +28,7 @@ val mongoUrl: String = "mongodb://neogeo:neogeo@mongo:27017"
     .withCodecRegistry(codecRegistry)
 
   val geoColl: MongoCollection[GeoEntity] = mongoDatabase.getCollection(collName)
+  val geoWriteColl: MongoCollection[Document] = mongoDatabase.getCollection(collName)
 
   def RFC_1123_STR_TO_BSON_TIME(rfcIn: String): BsonDateTime = {
     val format = DateTimeFormatter.RFC_1123_DATE_TIME
@@ -53,6 +54,9 @@ val mongoUrl: String = "mongodb://neogeo:neogeo@mongo:27017"
   def getCollection(collectionName: String): MongoCollection[Document] = {
     mongoDatabase.getCollection(collectionName)
   }
+
+  def addNode(document: Document): Future[String] =
+    insertOne(geoWriteColl, document)
 
   def insertMany(collection: MongoCollection[Document], documents: Seq[Document]): Future[String] = {
     val p = Promise[String]
